@@ -10,10 +10,17 @@ import qualified Data.Text.Lazy as LT
 import Formatting hiding (text)
 import Text.PrettyPrint.Leijen.Text hiding ((<$>), (<>))
 
+{- The options used when generating the Elm code.
+   You can set the @fielLabelModifier@ to customize the names used for the
+   fields in the generated Elm record types.
+-}
 data Options = Options
   { fieldLabelModifier :: Text -> Text
   }
 
+{-| The default options which use the same record field names as the Haskell
+code.
+-}
 defaultOptions :: Options
 defaultOptions = Options {fieldLabelModifier = id}
 

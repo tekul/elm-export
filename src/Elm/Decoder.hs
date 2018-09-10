@@ -39,10 +39,11 @@ instance HasDecoderRef ElmDatatype where
 instance HasDecoder ElmConstructor where
   render (NamedConstructor name value) = do
     dv <- render value
-    return $ "decode" <+> stext name <$$> indent 4 dv
+    return $ "Json.Decode.succeed" <+> stext name <$$> indent 4 dv
   render (RecordConstructor name value) = do
     dv <- render value
-    return $ "decode" <+> stext name <$$> indent 4 dv
+    return $ "Json.Decode.succeed" <+> stext name <$$> indent 4 dv
+  render x = error $ show x
 
 instance HasDecoder ElmValue where
   render (ElmRef name) = pure $ "decode" <> stext name
@@ -76,7 +77,7 @@ instance HasDecoderRef ElmPrimitive where
     dx <- renderRef x
     dy <- renderRef y
     return . parens $
-      "map2 (,)" <+> parens ("index 0" <+> dx) <+> parens ("index 1" <+> dy)
+      "map2 Tuple.pair" <+> parens ("index 0" <+> dx) <+> parens ("index 1" <+> dy)
   renderRef EUnit = pure $ parens "succeed ()"
   renderRef EDate = pure "decodeDate"
   renderRef EInt = pure "int"

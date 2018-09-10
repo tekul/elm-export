@@ -64,15 +64,14 @@ instance HasEncoderRef ElmPrimitive where
   renderRef (EList (ElmPrimitive EChar)) = pure "Json.Encode.string"
   renderRef (EList datatype) = do
     dd <- renderRef datatype
-    return . parens $ "Json.Encode.list << List.map" <+> dd
+    return . parens $ "Json.Encode.list " <+> dd
   renderRef (EMaybe datatype) = do
     dd <- renderRef datatype
     return . parens $ "Maybe.withDefault Json.Encode.null << Maybe.map" <+> dd
   renderRef (ETuple2 x y) = do
     dx <- renderRef x
     dy <- renderRef y
-    require "Exts.Json.Encode"
-    return . parens $ "Exts.Json.Encode.tuple2" <+> dx <+> dy
+    return . parens $ "\\(x, y) -> Json.Encode.list identity [" <+> dx <+> "x," <+> dy <+> "y ]"
   renderRef (EDict k v) = do
     dk <- renderRef k
     dv <- renderRef v
